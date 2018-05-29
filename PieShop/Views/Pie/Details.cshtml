@@ -1,0 +1,16 @@
+﻿@model PieShop.Models.Pie
+
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-12 col-md-10 col-lg-8 col-xl-8">
+        <div class="card">
+            <img class="card-img-top" src="@Model.ImageUrl">
+            <div class="card-body">
+                <h3 class="float-right">@Model.Price.ToString("c")</h3>
+                <h3 class="card-title">@Model.Name</h3>
+                <h4>@Model.ShortDescription</h4>
+                <p class="card-text">@Model.LongDescription</p>
+                <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pieId="@Model.Id" class="btn btn-primary">Add to cart</a>
+            </div>
+        </div>
+    </div>
+</div>

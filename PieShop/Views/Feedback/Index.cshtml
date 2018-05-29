@@ -1,0 +1,31 @@
+﻿@model PieShop.Models.Feedback
+
+<div class="row justify-content-center" style="margin-top: 1rem;">
+	<form asp-action="Index" method="post" role="form">
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<input asp-for="Name" class="form-control" placeholder="Name" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group col-md-6">
+				<input asp-for="Email" class="form-control" placeholder="Email" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<textarea asp-for="Message" class="form-control" rows="3" placeholder="Your message"></textarea>
+			<span asp-validation-for="Message" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<div class="form-check">
+				<input asp-for="ContactMe" class="form-check-input" />
+				<label asp-for="ContactMe" class="form-check-label"></label>
+			</div>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Send</button>
+	</form>
+
+	<email address="sasha.nightwish@gmail.com" content="Contact me directly!"></email>
+</div>

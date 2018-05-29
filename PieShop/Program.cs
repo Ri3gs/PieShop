@@ -1,25 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using PieShop.Models;
 
 namespace PieShop
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BuildWebHost(args).Run();
-        }
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			IWebHost webHost = BuildWebHost(args);
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
-    }
+			using (IServiceScope scope = webHost.Services.CreateScope())
+			{
+				IServiceProvider serviceProvider = scope.ServiceProvider;
+				try
+				{
+					AppDbContext appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
+					DbInitializer.Seed(appDbContext);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e);
+					throw;
+				}
+			}
+
+			webHost.Run();
+		}
+
+		public static IWebHost BuildWebHost(string[] args) =>
+			WebHost.CreateDefaultBuilder(args)
+				.UseStartup<Startup>()
+				.Build();
+	}
 }

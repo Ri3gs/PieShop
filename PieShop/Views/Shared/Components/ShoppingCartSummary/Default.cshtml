@@ -1,0 +1,13 @@
+﻿@model PieShop.ViewModels.ShoppingCart.ShoppingCartViewModel
+
+@if (Model.ShoppingCart.ShoppingCartItems.Count > 0)
+{
+	<li>
+		<a>
+			<span class="glyphicon glyphicon-shopping-cart">CART THINGY</span>
+			<span id="cart-status">
+				@Model.ShoppingCart.ShoppingCartItems.Count
+			</span>
+		</a>
+	</li>
+}

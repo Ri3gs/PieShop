@@ -1,34 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PieShop.Models;
 
 namespace PieShop
 {
-    public class Startup
-    {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
-        {
-        }
+	public class Startup
+	{
+		public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
-        }
-    }
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddMvc();
+			services.AddDbContext<AppDbContext>(options =>
+				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+			services.AddIdentity<IdentityUser, IdentityRole>(options =>
+				{
+					options.Password.RequireDigit = false;
+					options.Password.RequireLowercase = false;
+					options.Password.RequireNonAlphanumeric = false;
+					options.Password.RequireUppercase = false;
+					options.Password.RequiredLength = 5;
+				})
+				.AddEntityFrameworkStores<AppDbContext>();
+
+			services.AddTransient<IPieRepository, PieRepository>();
+			services.AddTransient<ICategoryRepository, CategoryRepository>();
+			services.AddTransient<IFeedbackRepository, FeedbackRepository>();
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddTransient<IOrderRepository, OrderRepository>();
+			services.AddScoped<ShoppingCart>(ShoppingCart.GetCart);
+			services.AddMemoryCache();
+			services.AddSession();
+		}
+
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage()
+					.UseStatusCodePages();
+			}
+			else
+			{
+				app.UseExceptionHandler("/AppException");
+			}
+
+			app.UseStaticFiles()
+				.UseAuthentication()
+				.UseSession()
+				.UseMvc(routes =>
+				{
+					routes.MapRoute(
+						name: "categoryFilter",
+						template: "Pie/{action}/{category?}",
+						defaults: new {Controller = "Pie", action = "List"});
+
+					routes.MapRoute(
+						name: "default",
+						template: "{controller=Home}/{action=Index}/{id?}");
+				});
+		}
+	}
 }
