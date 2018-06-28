@@ -24,5 +24,17 @@ namespace PieShop.Models
 
 		public Pie GetById(int id) =>
 			_dbContext.Pies.FirstOrDefault(pie => pie.Id == id);
+
+		public void UpdatePie(Pie pie)
+		{
+			_dbContext.Pies.Update(pie);
+			_dbContext.SaveChanges();
+		}
+
+		public void CreatePie(Pie pie)
+		{
+			_dbContext.Pies.Add(pie);
+			_dbContext.SaveChanges();
+		}
 	}
 }

@@ -7,5 +7,7 @@ namespace PieShop.Models
 		IEnumerable<Pie> GetPiesOfTheWeek();
 		IEnumerable<Pie> GetAll();
 		Pie GetById(int id);
+		void UpdatePie(Pie pie);
+		void CreatePie(Pie pie);
 	}
 }

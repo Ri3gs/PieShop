@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using PieShop.Auth
 @using PieShop.Components
-@inject SignInManager<IdentityUser> SignInManager
+@inject SignInManager<ApplicationUser> SignInManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +36,22 @@
 							<li class="nav-item">
 								<a class="nav-link" asp-controller="Feedback" asp-action="Index">Feedback</a>
 							</li>
+
+							@if (SignInManager.IsSignedIn(User))
+							{
+								<li class="nav-item">
+									<a class="nav-link" asp-controller="Admin" asp-action="UserManagement">Users management</a>
+								</li>
+
+								<li class="nav-item">
+									<a class="nav-link" asp-controller="Admin" asp-action="RoleManagement">Roles management</a>
+								</li>
+
+								<li class="nav-item">
+									<a class="nav-link" asp-controller="PieManagement" asp-action="Index">Pies management</a>
+								</li>
+							}
+
 							@if (SignInManager.IsSignedIn(User))
 							{
 								<li>

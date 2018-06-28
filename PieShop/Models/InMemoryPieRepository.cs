@@ -26,5 +26,14 @@ namespace PieShop.Models
 		public IEnumerable<Pie> GetAll() => _pies;
 
 		public Pie GetById(int id) => _pies.FirstOrDefault(pie => pie.Id == id);
+		public void UpdatePie(Pie pie)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public void CreatePie(Pie pie)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

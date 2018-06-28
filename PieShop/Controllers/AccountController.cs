@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PieShop.Auth;
 using PieShop.ViewModels.Account;
 
 namespace PieShop.Controllers
 {
 	public class AccountController : Controller
 	{
-		private readonly SignInManager<IdentityUser> _signInManager;
-		private readonly UserManager<IdentityUser> _userManager;
+		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly UserManager<ApplicationUser> _userManager;
 
 		public AccountController(
-			SignInManager<IdentityUser> signInManager,
-			UserManager<IdentityUser> userManager)
+			SignInManager<ApplicationUser> signInManager,
+			UserManager<ApplicationUser> userManager)
 		{
 			_signInManager = signInManager;
 			_userManager = userManager;
@@ -64,7 +65,7 @@ namespace PieShop.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var user = new IdentityUser(registerViewModel.UserName);
+				var user = new ApplicationUser(registerViewModel.UserName);
 				var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
 				if (result.Succeeded)
